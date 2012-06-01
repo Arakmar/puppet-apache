@@ -13,7 +13,7 @@ define apache::vhost::webdir(
     $documentroot_recurse = false
 ){
     $real_path = $path ? {
-        'absent' => $operatingsystem ? {
+        'absent' => $::operatingsystem ? {
             openbsd => "/var/www/htdocs/${name}",
             default => "/var/www/vhosts/${name}"
         },
@@ -31,7 +31,7 @@ define apache::vhost::webdir(
 
     if $owner == 'apache' {
       if $apache_default_user == '' {
-        $real_owner = $operatingsystem ? {
+        $real_owner = $::operatingsystem ? {
           openbsd => 'www',
           debian => 'www-data',
           default => $owner
@@ -44,7 +44,7 @@ define apache::vhost::webdir(
     }
     if $group == 'apache' {
       if $apache_default_group == '' {
-        $real_group = $operatingsystem ? {
+        $real_group = $::operatingsystem ? {
           openbsd => 'www',
           debian => 'www-data',
           default => $group
@@ -58,7 +58,7 @@ define apache::vhost::webdir(
 
     if $documentroot_owner == 'apache' {
       if $apache_default_user == '' {
-        $real_documentroot_owner = $operatingsystem ? {
+        $real_documentroot_owner = $::operatingsystem ? {
           openbsd => 'www',
           debian => 'www-data',
           default => $documentroot_owner
@@ -71,7 +71,7 @@ define apache::vhost::webdir(
     }
     if $documentroot_group == 'apache' {
       if $apache_default_group == '' {
-        $real_documentroot_group = $operatingsystem ? {
+        $real_documentroot_group = $::operatingsystem ? {
           openbsd => 'www',
           debian => 'www-data',
           default => $documentroot_group
@@ -112,7 +112,7 @@ define apache::vhost::webdir(
                 ensure => directory,
                 owner => $real_documentroot_owner, group => $real_documentroot_group, mode => 0660;
             }
-            case $operatingsystem {
+            case $::operatingsystem {
                 centos: { include apache::logrotate::centos::vhosts }
             }
             file{"${real_path}/private":

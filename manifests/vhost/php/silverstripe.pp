@@ -46,7 +46,7 @@ define apache::vhost::php::silverstripe(
     $manage_directories = true
 ){
     $documentroot = $path ? {
-        'absent' => $operatingsystem ? {
+        'absent' => $::operatingsystem ? {
             openbsd => "/var/www/htdocs/${name}/www",
             default => "/var/www/vhosts/${name}/www"
         },

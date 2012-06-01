@@ -37,7 +37,7 @@ define apache::vhost::modperl(
     case $cgi_binpath {
         'absent': {
             $real_path = $path ? {
-                'absent' => $operatingsystem ? {
+                'absent' => $::operatingsystem ? {
                     openbsd => "/var/www/htdocs/${name}",
                     default => "/var/www/vhosts/${name}"
                 },

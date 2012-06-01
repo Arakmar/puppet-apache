@@ -46,14 +46,14 @@ define apache::vhost::php::gallery2(
     $manage_directories = true
 ){
     $documentroot = $path ? {
-        'absent' => $operatingsystem ? {
+        'absent' => $::operatingsystem ? {
             openbsd => "/var/www/htdocs/${name}/www",
             default => "/var/www/vhosts/${name}/www"
         },
         default => "${path}/www"
     }
     $gdatadir = $path ? {
-        'absent' => $operatingsystem ? {
+        'absent' => $::operatingsystem ? {
             openbsd => "/var/www/htdocs/${name}/g2data",
             default => "/var/www/vhosts/${name}/g2data"
         },

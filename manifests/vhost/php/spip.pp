@@ -43,7 +43,7 @@ define apache::vhost::php::spip(
     $htpasswd_path = 'absent'
 ){
     $documentroot = $path ? {
-        'absent' => $operatingsystem ? {
+        'absent' => $::operatingsystem ? {
             openbsd => "/var/www/htdocs/${name}/www",
             default => "/var/www/vhosts/${name}/www"
         },

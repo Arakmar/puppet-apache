@@ -22,7 +22,7 @@ define apache::vhost::gitweb(
         ensure => $ensure,
         path => '/var/www/git',
         path_is_webdir => true,
-        logpath => $operatingsystem ? {
+        logpath => $::operatingsystem ? {
             centos => '/var/log/httpd',
             fedora => '/var/log/httpd',
             redhat => '/var/log/httpd',

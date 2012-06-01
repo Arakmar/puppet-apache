@@ -19,7 +19,7 @@
 # $apache_default_group: Set this to the group with which the
 #                        apache is running.
 class apache {
-  case $operatingsystem {
+  case $::operatingsystem {
     centos: { include apache::centos }
     gentoo: { include apache::gentoo }
     debian: { include apache::debian }

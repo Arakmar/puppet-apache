@@ -13,7 +13,7 @@ define apache::gentoo::module(
             "puppet://$server/modules/site-apache/modules.d/${fqdn}/${name}.conf",
             "puppet://$server/modules/site-apache/modules.d/${apache_cluster_node}/${name}.conf",
             "puppet://$server/modules/site-apache/modules.d/${name}.conf",
-            "puppet://$server/modules/apache/modules.d/${operatingsystem}/${name}.conf",
+            "puppet://$server/modules/apache/modules.d/${::operatingsystem}/${name}.conf",
             "puppet://$server/modules/apache/modules.d/${name}.conf"
         ],
         default => "puppet://$server/$source",

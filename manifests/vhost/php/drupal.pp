@@ -47,7 +47,7 @@ define apache::vhost::php::drupal(
     $manage_cron = true
 ){
     $documentroot = $path ? {
-        'absent' => $operatingsystem ? {
+        'absent' => $::operatingsystem ? {
             openbsd => "/var/www/htdocs/${name}/www",
             default => "/var/www/vhosts/${name}/www"
         },

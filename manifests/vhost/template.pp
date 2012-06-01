@@ -65,7 +65,7 @@ define apache::vhost::template(
     }
 
     $real_path = $path ? {
-        'absent' => $operatingsystem ? {
+        'absent' => $::operatingsystem ? {
             openbsd => "/var/www/htdocs/$name",
             default => "/var/www/vhosts/$name"
         },
@@ -140,7 +140,7 @@ define apache::vhost::template(
 
     apache::vhost::file{$name:
         ensure => $ensure,
-        content => template("apache/vhosts/$template_mode/$operatingsystem.erb"),
+        content => template("apache/vhosts/$template_mode/$::operatingsystem.erb"),
         do_includes => $do_includes,
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,
