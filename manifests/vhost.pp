@@ -100,6 +100,6 @@ define apache::vhost(
                 use_mod_macro => $use_mod_macro,
             }
         }
-        default: { fail("no such vhost_mode: $vhost_mode defined for $name.") }
+        default: { fail("no such vhost_mode: ${vhost_mode} defined for ${name}.") }
     }
 }

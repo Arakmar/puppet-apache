@@ -66,19 +66,19 @@ define apache::vhost::template(
 
     $real_path = $path ? {
         'absent' => $::operatingsystem ? {
-            openbsd => "/var/www/htdocs/$name",
-            default => "/var/www/vhosts/$name"
+            openbsd => "/var/www/htdocs/${name}",
+            default => "/var/www/vhosts/${name}"
         },
         default => $path
     }
 
     if $path_is_webdir {
-        $documentroot = "$real_path"
+        $documentroot = "${real_path}"
     } else {
-        $documentroot = "$real_path/www"
+        $documentroot = "${real_path}/www"
     }
     $logdir = $logpath ? {
-        'absent' => "$real_path/logs",
+        'absent' => "${real_path}/logs",
         default => $logpath
     }
 
@@ -92,17 +92,17 @@ define apache::vhost::template(
         default => $domainalias
     }
     if $htpasswd_path == 'absent' {
-      $real_htpasswd_path = "/var/www/htpasswds/$name"
+      $real_htpasswd_path = "/var/www/htpasswds/${name}"
     } else {
       $real_htpasswd_path = $htpasswd_path
     }
     case $run_mode {
         'itk': {
             case $run_uid {
-                'absent': { fail("you have to define run_uid for $name on $fqdn") }
+                'absent': { fail("you have to define run_uid for $name on ${::fqdn}") }
             }
             case $run_gid {
-                'absent': { fail("you have to define run_gid for $name on $fqdn") }
+                'absent': { fail("you have to define run_gid for $name on ${::fqdn}") }
             }
         }
     }
@@ -112,35 +112,35 @@ define apache::vhost::template(
     # php php_safe_mode_exec_bin directory
     case $php_safe_mode_exec_bin_dir {
         'absent': {
-            $real_php_safe_mode_exec_bin_dir = "/var/www/vhosts/$name/bin"
+            $real_php_safe_mode_exec_bin_dir = "/var/www/vhosts/${name}/bin"
         }
         default: { $real_php_safe_mode_exec_bin_dir = $php_safe_mode_exec_bin_dir }
     }
     # php upload_tmp_dir
     case $php_upload_tmp_dir {
         'absent': {
-            $real_php_upload_tmp_dir = "/var/www/upload_tmp_dir/$name"
+            $real_php_upload_tmp_dir = "/var/www/upload_tmp_dir/${name}"
         }
         default: { $real_php_upload_tmp_dir = $php_upload_tmp_dir }
     }
     # php session_save_path
     case $php_session_save_path {
         'absent': {
-            $real_php_session_save_path = "/var/www/session.save_path/$name"
+            $real_php_session_save_path = "/var/www/session.save_path/${name}"
         }
         default: { $real_php_session_save_path = $php_session_save_path }
     }
     # dav db dir
     case $dav_db_dir {
         'absent': {
-            $real_dav_db_dir = "/var/www/dav_db_dir/$name"
+            $real_dav_db_dir = "/var/www/dav_db_dir/${name}"
         }
         default: { $real_dav_db_dir = $dav_db_dir }
     }
 
     apache::vhost::file{$name:
         ensure => $ensure,
-        content => template("apache/vhosts/$template_mode/$::operatingsystem.erb"),
+        content => template("apache/vhosts/$template_mode/${::operatingsystem}.erb"),
         do_includes => $do_includes,
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,

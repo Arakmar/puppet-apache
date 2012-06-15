@@ -3,16 +3,16 @@ class apache::openbsd inherits apache::base {
     $config_dir = '/var/www'
 
     File[vhosts_dir]{
-        path => "$config_dir/vhosts.d",
+        path => "${config_dir}/vhosts.d",
     }
     File[modules_dir]{
-        path => "$config_dir/conf/modules",
+        path => "${config_dir}/conf/modules",
     }
     File[config_dir]{
-        path => "$config_dir/conf.d",
+        path => "${config_dir}/conf.d",
     }
     File[include_dir]{
-        path => "$config_dir/include.d",
+        path => "${config_dir}/include.d",
     }
     File['htpasswd_dir']{
         group => www,
@@ -26,10 +26,10 @@ class apache::openbsd inherits apache::base {
     }
     file{'apache_main_config':
         path => "${config_dir}/conf/httpd.conf",
-        source => [ "puppet://$server/modules/site-apache/config/OpenBSD/${fqdn}/httpd.conf",
-                    "puppet://$server/modules/site-apache/config/OpenBSD/${apache_cluster_node}/httpd.conf",
-                    "puppet://$server/modules/site-apache/config/OpenBSD//httpd.conf",
-                    "puppet://$server/modules/apache/config/OpenBSD/httpd.conf" ],
+        source => [ "puppet://${server}/modules/site-apache/config/OpenBSD/${::fqdn}/httpd.conf",
+                    "puppet://${server}/modules/site-apache/config/OpenBSD/${apache_cluster_node}/httpd.conf",
+                    "puppet://${server}/modules/site-apache/config/OpenBSD//httpd.conf",
+                    "puppet://${server}/modules/apache/config/OpenBSD/httpd.conf" ],
         notify => Service['apache'],
         owner => root, group => 0, mode => 0644;
     }
@@ -51,7 +51,7 @@ class apache::openbsd inherits apache::base {
         stop => 'apachectl stop',
     }
     file{'/opt/bin/apache_logrotate.sh':
-        source => "puppet://$server/modules/apache/scripts/OpenBSD/bin/apache_logrotate.sh",
+        source => "puppet://${server}/modules/apache/scripts/OpenBSD/bin/apache_logrotate.sh",
         require => File['/opt/bin'],
         owner => root, group => 0, mode => 0700;
     }

@@ -11,17 +11,17 @@ class apache::gentoo inherits apache::package {
         category => 'www-servers',
     }
     File[vhosts_dir]{
-        path => "$config_dir/vhosts.d",
+        path => "${config_dir}/vhosts.d",
     }
     File[modules_dir]{
-        path => "$config_dir/modules.d",
+        path => "${config_dir}/modules.d",
     }
 
     apache::gentoo::module { '00_default_settings': }
     apache::gentoo::module { '00_error_documents': }
     apache::config::file { 'default_vhost.include':
         source => "apache/vhosts.d/default_vhost.include",
-        destination => "$config_dir/vhosts.d/default_vhost.include",
+        destination => "${config_dir}/vhosts.d/default_vhost.include",
     }
 
     # set the default for the ServerName

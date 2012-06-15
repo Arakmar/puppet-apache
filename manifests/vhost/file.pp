@@ -18,15 +18,15 @@ define apache::vhost::file(
     $use_mod_macro = false
 ){
     $vhosts_dir = $::operatingsystem ? {
-        centos => "$apache::centos::config_dir/vhosts.d",
-        gentoo => "$apache::gentoo::config_dir/vhosts.d",
-        debian => "$apache::debian::config_dir/sites-enabled",
-        ubuntu => "$apache::ubuntu::config_dir/sites-enabled",
-        openbsd => "$apache::openbsd::config_dir/vhosts.d",
+        centos => "${apache::centos::config_dir}/vhosts.d",
+        gentoo => "${apache::gentoo::config_dir}/vhosts.d",
+        debian => "${apache::debian::config_dir}/sites-enabled",
+        ubuntu => "${apache::ubuntu::config_dir}/sites-enabled",
+        openbsd => "${apache::openbsd::config_dir}/vhosts.d",
         default => '/etc/apache2/vhosts.d',
     }
     $real_vhost_destination = $vhost_destination ? {
-        'absent' => "$vhosts_dir/$name.conf",
+        'absent' => "${vhosts_dir}/${name}.conf",
         default => $vhost_destination,
     }
     file{"${name}.conf":
@@ -46,17 +46,17 @@ define apache::vhost::file(
         'absent': {
             $real_vhost_source = $vhost_source ? {
                 'absent'  => [
-                    "puppet://$server/modules/site-apache/vhosts.d/$fqdn/$name.conf",
-                    "puppet://$server/modules/site-apache/vhosts.d/$apache_cluster_node/$name.conf",
-                    "puppet://$server/modules/site-apache/vhosts.d/$::operatingsystem.$lsbdistcodename/$name.conf",
-                    "puppet://$server/modules/site-apache/vhosts.d/$::operatingsystem/$name.conf",
-                    "puppet://$server/modules/site-apache/vhosts.d/$name.conf",
-                    "puppet://$server/modules/apache/vhosts.d/$name.conf",
-                    "puppet://$server/modules/apache/vhosts.d/$::operatingsystem.$lsbdistcodename/$name.conf",
-                    "puppet://$server/modules/apache/vhosts.d/$::operatingsystem/$name.conf",
-                    "puppet://$server/modules/apache/vhosts.d/$name.conf"
+                    "puppet://${server}/modules/site-apache/vhosts.d/${::fqdn}/${name}.conf",
+                    "puppet://${server}/modules/site-apache/vhosts.d/${apache_cluster_node}/${name}.conf",
+                    "puppet://${server}/modules/site-apache/vhosts.d/${::operatingsystem}.${::lsbdistcodename}/${name}.conf",
+                    "puppet://${server}/modules/site-apache/vhosts.d/${::operatingsystem}/${name}.conf",
+                    "puppet://${server}/modules/site-apache/vhosts.d/${name}.conf",
+                    "puppet://${server}/modules/apache/vhosts.d/${name}.conf",
+                    "puppet://${server}/modules/apache/vhosts.d/${::operatingsystem}.${::lsbdistcodename}/${name}.conf",
+                    "puppet://${server}/modules/apache/vhosts.d/${::operatingsystem}/${name}.conf",
+                    "puppet://${server}/modules/apache/vhosts.d/${name}.conf"
                 ],
-                default => "puppet://$server/$vhost_source",
+                default => "puppet://${server}/${vhost_source}",
             }
             File["${name}.conf"]{
                 source => $real_vhost_source,
@@ -72,15 +72,15 @@ define apache::vhost::file(
         'absent','nodeploy': { info("don't deploy a htpasswd file for ${name}") }
         default: {
             if $htpasswd_path == 'absent' {
-                $real_htpasswd_path = "/var/www/htpasswds/$name"
+                $real_htpasswd_path = "/var/www/htpasswds/${name}"
             } else {
                 $real_htpasswd_path = $htpasswd_path
             }
             file{$real_htpasswd_path:
                 ensure => $ensure,
-                source => [ "puppet://$server/modules/site-apache/htpasswds/$fqdn/$name",
-                            "puppet://$server/modules/site-apache/htpasswds/$apache_cluster_node/$name",
-                            "puppet://$server/modules/site-apache/htpasswds/$name" ],
+                source => [ "puppet://${server}/modules/site-apache/htpasswds/${::fqdn}/${name}",
+                            "puppet://${server}/modules/site-apache/htpasswds/${apache_cluster_node}/${name}",
+                            "puppet://${server}/modules/site-apache/htpasswds/${name}" ],
                 owner => root, group => 0, mode => 0644;
             }
         }

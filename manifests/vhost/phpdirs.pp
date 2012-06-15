@@ -12,7 +12,7 @@ define apache::vhost::phpdirs(
     case $php_upload_tmp_dir {
         'absent': {
             include apache::defaultphpdirs
-            $real_php_upload_tmp_dir = "/var/www/upload_tmp_dir/$name"
+            $real_php_upload_tmp_dir = "/var/www/upload_tmp_dir/${name}"
         }
         default: { $real_php_upload_tmp_dir = $php_upload_tmp_dir }
     }
@@ -20,7 +20,7 @@ define apache::vhost::phpdirs(
     case $php_session_save_path {
         'absent': {
             include apache::defaultphpdirs
-            $real_php_session_save_path = "/var/www/session.save_path/$name"
+            $real_php_session_save_path = "/var/www/session.save_path/${name}"
         }
         default: { $real_php_session_save_path = $php_session_save_path }
     }

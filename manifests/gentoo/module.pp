@@ -10,7 +10,7 @@ define apache::gentoo::module(
     }
     $real_source = $source ? {
         ''  => [
-            "puppet://$server/modules/site-apache/modules.d/${fqdn}/${name}.conf",
+            "puppet://$server/modules/site-apache/modules.d/${::fqdn}/${name}.conf",
             "puppet://$server/modules/site-apache/modules.d/${apache_cluster_node}/${name}.conf",
             "puppet://$server/modules/site-apache/modules.d/${name}.conf",
             "puppet://$server/modules/apache/modules.d/${::operatingsystem}/${name}.conf",

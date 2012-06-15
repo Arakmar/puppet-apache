@@ -85,9 +85,9 @@ define apache::vhost::webdir(
     case $ensure {
         absent: {
             if $manage_docroot {
-              $managed_directories = [ "$real_path", "${real_path}/private", "$logdir", "$documentroot" ]
+              $managed_directories = [ "$real_path", "${real_path}/private", "$logdir", "${documentroot}" ]
             } else {
-              $managed_directories = [ "$real_path", "${real_path}/private", "$logdir" ]
+              $managed_directories = [ "$real_path", "${real_path}/private", "${logdir}" ]
             }
             file{$managed_directories:
                 ensure => absent,
@@ -97,18 +97,18 @@ define apache::vhost::webdir(
             }
         }
         default: {
-            file{"$real_path":
+            file{"${real_path}":
                 ensure => directory,
                 owner => $real_owner, group => $real_group, mode => $real_mode;
             }
             if $manage_docroot {
-              file{"$documentroot":
+              file{"${documentroot}":
                 ensure => directory,
                 recurse => $documentroot_recurse,
                 owner => $real_documentroot_owner, group => $real_documentroot_group, mode => $documentroot_mode;
               }
             }
-            file{"$logdir":
+            file{"${logdir}":
                 ensure => directory,
                 owner => $real_documentroot_owner, group => $real_documentroot_group, mode => 0660;
             }
