@@ -1,0 +1,135 @@
+# PHP FPM Virtualhost for <%= servername %>
+<%- unless ssl_mode.to_s == 'only'  then -%>
+<VirtualHost *:80>
+    ServerName <%= servername %>
+    <%- unless serveralias.to_s.empty? then -%>
+    ServerAlias <%= serveralias %>
+    <%- end -%>
+    <%- unless server_admin.to_s.empty? or server_admin.to_s == 'absent' then -%>
+    ServerAdmin <%= server_admin %>
+    <%- end -%>
+    DocumentRoot <%= documentroot %>
+
+    <%- if logpath != 'absent' then -%>
+    ErrorLog <%= logpath %>/error_log
+    CustomLog <%= logpath %>/access_log combined
+    <%- end -%>
+
+    <%- if default_charset.to_s != 'absent' then -%>
+    AddDefaultCharset <%= default_charset %>
+    <%- end -%>
+    <%- if ssl_mode.to_s == 'force' then -%>
+    Redirect permanent / https://<%= servername %>/
+    <%- end -%>
+
+    <%- if not ssl_mode.to_s == 'force' then -%>
+    <Directory />
+		Options FollowSymLinks
+		AllowOverride None
+    </Directory>
+	
+    <Directory "<%= documentroot %>/">
+        AllowOverride <%= allow_override %>
+	
+	Order <%= order_allow_deny %>
+	<%- unless allow_list.empty? then -%>
+	Allow from <%= allow_list.join(' ') %>
+	<%- end -%>
+	<%- unless deny_list.empty? then -%>
+	Allow from <%= deny_list.join(' ') %>
+	<%- end -%>
+
+        <%- if options.to_s != 'absent' or do_includes.to_s == 'true' then -%>
+        Options <%- unless options.to_s == 'absent' then -%><%= options %><%- end -%><%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%> +Includes<%- end -%>
+
+        <%- end -%>
+        <%- unless htpasswd_file.to_s == 'absent' then -%>
+        AuthType Basic
+        AuthName "Access for <%= servername %>"
+        AuthUserFile <%= real_htpasswd_path %>
+        require valid-user
+        <%- end -%>
+    </Directory>
+    
+	FastCGIExternalServer <%= documentroot %>/.fpm/handler -socket /var/lib/apache2/fpm-<%= website_name %>.sock
+	AddType application/x-httpd-fastphp .php
+	Action application/x-httpd-fastphp /.fpm/handler
+	
+	<FilesMatch "\.ph(p3?|tml)$">
+		SetHandler application/x-httpd-fastphp
+	</FilesMatch>
+	<FilesMatch "\.phps$">
+		SetHandler application/x-httpd-fastphp
+	</FilesMatch>
+
+	<Location /.fpm/handler>
+		Order deny,allow
+		Deny from all
+		Allow from env=REDIRECT_STATUS
+	</Location>
+
+	<Location /.fpm/status>
+		SetHandler fpm-status
+		Action fpm-status /.fpm/handler virtual
+		Order deny,allow
+		Deny from all
+		Allow from 127.0.0.1
+	</Location>
+    <%- end -%>
+
+    <%- unless additional_options.to_s == 'absent' then -%>
+    <%= additional_options %>
+    <%- end -%>
+</VirtualHost>
+<%- end -%>
+
+<%- unless ssl_mode.to_s == 'false'  then -%>
+<VirtualHost *:443>
+    ServerName <%= servername %>
+    <%- unless serveralias.to_s.empty? then -%>
+    ServerAlias <%= serveralias %>
+    <%- end -%>
+    <%- unless server_admin.to_s.empty? or server_admin.to_s == 'absent' then -%>
+    ServerAdmin <%= server_admin %>
+    <%- end -%>
+    DocumentRoot <%= documentroot %>/
+
+    <%- if logpath != 'absent' then -%>
+    ErrorLog <%= logpath %>/error_log
+    CustomLog <%= logpath %>/access_log combined
+    <%- end -%>
+
+    <%- if default_charset.to_s != 'absent' then -%>
+    AddDefaultCharset <%= default_charset %>
+    <%- end -%>
+
+    <%- if options.to_s != 'absent' or htpasswd_file.to_s != 'absent' then -%>
+    <Directory "<%= documentroot %>/">
+        AllowOverride <%= allow_override %>
+
+	Order <%= real_order_allow_deny_ssl %>
+	<%- unless real_allow_list_ssl.empty? then -%>
+	Allow from <%= real_allow_list_ssl.join(' ') %>
+	<%- end -%>
+	<%- unless real_deny_list_ssl.empty? then -%>
+	Allow from <%= real_deny_list_ssl.join(' ') %>
+	<%- end -%>
+        <%- if options.to_s != 'absent' or do_includes.to_s == 'true' then -%>
+        Options <%= options %><%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%> +Includes<%- end -%>
+
+        <%- end -%>
+        <%- unless htpasswd_file.to_s == 'absent' then -%>
+        AuthType Basic
+        AuthName "Access for <%= servername %>"
+        AuthUserFile <%= real_htpasswd_path %>
+        require valid-user
+        <%- end -%>
+    </Directory>
+    <%- end %>
+
+    <%- unless additional_options.to_s == 'absent' then -%>
+    <%= additional_options %>
+    <%- end -%>
+</VirtualHost>
+<%- end -%>
+
