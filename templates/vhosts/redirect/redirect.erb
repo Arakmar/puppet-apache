@@ -10,8 +10,10 @@
     ServerAdmin <%= server_admin %>
     <%- end -%>
 
-    ErrorLog logs/redirect_<%= servername %>_error.log
-    CustomLog logs/redirect_<%= servername %>_access.log combined
+    <%- if logpath != 'absent' then -%>
+    ErrorLog <%= logpath %>/error_log
+    CustomLog <%= logpath %>/access_log combined
+    <%- end -%>
     <%- if ssl_mode.to_s == 'force' then -%>
     Redirect permanent / https://<%= servername %>/
     <% else -%>

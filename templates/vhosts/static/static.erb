@@ -1,7 +1,6 @@
 # <%= servername %>
 <%- unless ssl_mode.to_s == 'only'  then -%>
 <VirtualHost *:80>
-    Include include.d/defaults.inc
     ServerName <%= servername %>
     <%- unless serveralias.to_s.empty? then -%>
     ServerAlias <%= serveralias %>
@@ -11,8 +10,11 @@
     <%- end -%>
     DocumentRoot <%= documentroot %>/
 
-    ErrorLog <%= logdir %>/error_log
-    CustomLog <%= logdir %>/access_log combined
+    <%- if logpath != 'absent' then -%>
+    ErrorLog <%= logpath %>/error_log
+    CustomLog <%= logpath %>/access_log combined
+    <%- end -%>
+
     <%- if default_charset.to_s != 'absent' then -%>
     AddDefaultCharset <%= default_charset %>
     <%- end -%>
@@ -23,36 +25,27 @@
     <%- if not ssl_mode.to_s == 'force' then -%>
     <Directory "<%= documentroot %>/">
         AllowOverride <%= allow_override %>
+	
+	Order <%= order_allow_deny %>
+	<%- unless allow_list.empty? then -%>
+	Allow from <%= allow_list.join(' ') %>
+	<%- end -%>
+	<%- unless deny_list.empty? then -%>
+	Allow from <%= deny_list.join(' ') %>
+	<%- end -%>
+
         <%- if options.to_s != 'absent' or do_includes.to_s == 'true' then -%>
         Options <%- unless options.to_s == 'absent' then -%><%= options %><%- end -%><%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%> +Includes<%- end -%>
 
         <%- end -%>
         <%- unless htpasswd_file.to_s == 'absent' then -%>
         AuthType Basic
-        AuthName "Access fuer <%= servername %>"
+        AuthName "Access for <%= servername %>"
         AuthUserFile <%= real_htpasswd_path %>
         require valid-user
         <%- end -%>
     </Directory>
     <%- end -%>
-
-    <IfModule mod_security2.c>
-        <%- if mod_security.to_s == 'true' then -%>
-        SecRuleEngine On
-        <%- if mod_security_relevantonly.to_s == 'true' then -%>
-        SecAuditEngine RelevantOnly
-        <%- else -%>
-        SecAuditEngine On
-        <%- end -%>
-        <%- else -%>
-        SecRuleEngine Off
-        SecAuditEngine Off
-        <%- end -%>
-        SecAuditLogType Concurrent
-        SecAuditLogStorageDir <%= logdir %>/
-        SecAuditLog <%= logdir %>/mod_security_audit.log
-        SecDebugLog <%= logdir %>/mod_security_debug.log
-    </IfModule>
 
     <%- unless additional_options.to_s == 'absent' then -%>
     <%= additional_options %>
@@ -62,8 +55,6 @@
 
 <%- unless ssl_mode.to_s == 'false'  then -%>
 <VirtualHost *:443>
-    Include include.d/defaults.inc
-    Include include.d/ssl_defaults.inc
     ServerName <%= servername %>
     <%- unless serveralias.to_s.empty? then -%>
     ServerAlias <%= serveralias %>
@@ -73,8 +64,11 @@
     <%- end -%>
     DocumentRoot <%= documentroot %>/
 
-    ErrorLog <%= logdir %>/error_log
-    CustomLog <%= logdir %>/access_log combined
+    <%- if logpath != 'absent' then -%>
+    ErrorLog <%= logpath %>/error_log
+    CustomLog <%= logpath %>/access_log combined
+    <%- end -%>
+
     <%- if default_charset.to_s != 'absent' then -%>
     AddDefaultCharset <%= default_charset %>
     <%- end -%>
@@ -82,36 +76,26 @@
     <%- if options.to_s != 'absent' or htpasswd_file.to_s != 'absent' then -%>
     <Directory "<%= documentroot %>/">
         AllowOverride <%= allow_override %>
+
+	Order <%= real_order_allow_deny_ssl %>
+	<%- unless real_allow_list_ssl.empty? then -%>
+	Allow from <%= real_allow_list_ssl.join(' ') %>
+	<%- end -%>
+	<%- unless real_deny_list_ssl.empty? then -%>
+	Allow from <%= real_deny_list_ssl.join(' ') %>
+	<%- end -%>
         <%- if options.to_s != 'absent' or do_includes.to_s == 'true' then -%>
         Options <%= options %><%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%> +Includes<%- end -%>
 
         <%- end -%>
         <%- unless htpasswd_file.to_s == 'absent' then -%>
         AuthType Basic
-        AuthName "Access fuer <%= servername %>"
+        AuthName "Access for <%= servername %>"
         AuthUserFile <%= real_htpasswd_path %>
         require valid-user
         <%- end -%>
     </Directory>
     <%- end %>
-
-    <IfModule mod_security2.c>
-        <%- if mod_security.to_s == 'true' then -%>
-        SecRuleEngine On
-        <%- if mod_security_relevantonly.to_s == 'true' then -%>
-        SecAuditEngine RelevantOnly
-        <%- else -%>
-        SecAuditEngine On
-        <%- end -%>
-        <%- else -%>
-        SecRuleEngine Off
-        SecAuditEngine Off
-        <%- end -%>
-        SecAuditLogType Concurrent
-        SecAuditLogStorageDir <%= logdir %>/
-        SecAuditLog <%= logdir %>/mod_security_audit.log
-        SecDebugLog <%= logdir %>/mod_security_debug.log
-    </IfModule>
 
     <%- unless additional_options.to_s == 'absent' then -%>
     <%= additional_options %>

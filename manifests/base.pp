@@ -1,6 +1,9 @@
 class apache::base {
     file{'vhosts_dir':
         path => '/etc/apache2/vhosts.d',
+        purge => true,
+        force => true,
+        recurse => true,
         ensure => directory,
         owner => root, group => 0, mode => 0755;
     }

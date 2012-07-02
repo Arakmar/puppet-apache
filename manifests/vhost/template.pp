@@ -23,7 +23,7 @@
 define apache::vhost::template(
     $ensure = present,
     $path = 'absent',
-    $path_is_webdir = false,
+    $path_is_webdir = true,
     $logpath = 'absent',
     $domain = 'absent',
     $domainalias = 'absent',
@@ -49,19 +49,29 @@ define apache::vhost::template(
     $run_gid = 'absent',
     $template_mode = 'static',
     $ssl_mode = false,
-    $mod_security = true,
-    $mod_security_relevantonly = true,
     $use_mod_macro = false,
     $htpasswd_file = 'absent',
     $htpasswd_path = 'absent',
     $ldap_auth = false,
-    $ldap_user = 'any'
+    $ldap_user = 'any',
+    $allow_list = ['all'],
+    $deny_list = '',
+    $order_allow_deny = "allow,deny",
+    $use_custom_ssl_access = false,
+    $allow_list_ssl = ['all'],
+    $deny_list_ssl = '',
+    $order_allow_deny_ssl = "allow,deny",
+    $use_nagios = false,
+    $nagios_check_string = "",
+    $nagios_auth = false,
+    $auth_name = "",
+    $auth_password = ""
 ){
-    if $mod_security {
-        case $run_mode {
-          'itk': { include mod_security::itk }
-          default: { include mod_security }
-        }
+
+    if ! $use_custom_ssl_access {
+	$real_order_allow_deny_ssl = $order_allow_deny
+	$real_allow_list_ssl = $allow_list
+	$real_deny_list_ssl = $deny_list
     }
 
     $real_path = $path ? {
@@ -76,10 +86,6 @@ define apache::vhost::template(
         $documentroot = "${real_path}"
     } else {
         $documentroot = "${real_path}/www"
-    }
-    $logdir = $logpath ? {
-        'absent' => "${real_path}/logs",
-        default => $logpath
     }
 
     $servername = $domain ? {

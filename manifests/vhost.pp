@@ -44,11 +44,11 @@ define apache::vhost(
     $ssl_mode = false,
     $htpasswd_file = 'absent',
     $htpasswd_path = 'absent',
-    $mod_security = true,
-    $mod_security_relevantonly = true,
     $use_mod_macro = false,
     $ldap_auth = false,
-    $ldap_user = 'any'
+    $ldap_user = 'any',
+    $use_nagios = false,
+    $nagios_check_string = ''
 ) {
     # file or template mode?
     case $vhost_mode {
@@ -96,8 +96,17 @@ define apache::vhost(
                 htpasswd_path => $htpasswd_path,
                 ldap_auth => $ldap_auth,
                 ldap_user => $ldap_user,
-                mod_security => $mod_security,
                 use_mod_macro => $use_mod_macro,
+            }
+
+            if $use_nagios {
+		nagios::service::http { "$domain":
+			use_auth => $nagios_auth,
+			auth_name => $auth_name,
+			auth_password => $auth_password,
+			check_string => $nagios_check_string,
+			server_name => $nagios_target_server_name
+		}
             }
         }
         default: { fail("no such vhost_mode: ${vhost_mode} defined for ${name}.") }
