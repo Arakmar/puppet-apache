@@ -105,7 +105,8 @@ define apache::vhost(
 			auth_name => $auth_name,
 			auth_password => $auth_password,
 			check_string => $nagios_check_string,
-			server_name => $nagios_target_server_name
+			server_name => $nagios_target_server_name,
+			ensure => $ensure
 		}
             }
         }
