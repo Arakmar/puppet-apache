@@ -50,6 +50,8 @@ define apache::vhost(
     $use_nagios = false,
     $nagios_check_string = ''
 ) {
+    include apache
+
     # file or template mode?
     case $vhost_mode {
         'file': {
