@@ -61,11 +61,6 @@ define apache::vhost::template(
     $allow_list_ssl = ['all'],
     $deny_list_ssl = '',
     $order_allow_deny_ssl = "allow,deny",
-    $use_nagios = false,
-    $nagios_check_string = "",
-    $nagios_auth = false,
-    $auth_name = "",
-    $auth_password = ""
 ){
 
     if ! $use_custom_ssl_access {
