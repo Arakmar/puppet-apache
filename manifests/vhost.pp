@@ -48,7 +48,17 @@ define apache::vhost(
     $ldap_auth = false,
     $ldap_user = 'any',
     $use_nagios = false,
-    $nagios_check_string = ''
+    $nagios_check_string = '',
+    $nagios_auth = false,
+    $auth_name = "",
+    $auth_password = "",
+    $allow_list = ['all'],
+    $deny_list = '',
+    $order_allow_deny = "allow,deny",
+    $use_custom_ssl_access = false,
+    $allow_list_ssl = ['all'],
+    $deny_list_ssl = '',
+    $order_allow_deny_ssl = "allow,deny",
 ) {
     include apache
 
@@ -99,6 +109,13 @@ define apache::vhost(
                 ldap_auth => $ldap_auth,
                 ldap_user => $ldap_user,
                 use_mod_macro => $use_mod_macro,
+                allow_list => $allow_list,
+                deny_list => $deny_list,
+                order_allow_deny => $order_allow_deny,
+                use_custom_ssl_access => $use_custom_ssl_access,
+                allow_list_ssl => $allow_list_ssl,
+                deny_list_ssl => $deny_list_ssl,
+                order_allow_deny_ssl => $order_allow_deny_ssl,
             }
 
             if $use_nagios {
