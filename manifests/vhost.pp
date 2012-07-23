@@ -73,6 +73,11 @@ define apache::vhost(
                 htpasswd_file => $htpasswd_file,
                 htpasswd_path => $htpasswd_path,
                 use_mod_macro => $use_mod_macro,
+                use_nagios => $use_nagios,
+                nagios_check_string => $nagios_check_string,
+                nagios_auth => $nagios_auth,
+                auth_name => $auth_name,
+                auth_password => $auth_password,
             }
         }
         'template': {
@@ -116,17 +121,11 @@ define apache::vhost(
                 allow_list_ssl => $allow_list_ssl,
                 deny_list_ssl => $deny_list_ssl,
                 order_allow_deny_ssl => $order_allow_deny_ssl,
-            }
-
-            if $use_nagios {
-		nagios::service::http { "$domain":
-			use_auth => $nagios_auth,
-			auth_name => $auth_name,
-			auth_password => $auth_password,
-			check_string => $nagios_check_string,
-			server_name => $nagios_target_server_name,
-			ensure => $ensure
-		}
+                use_nagios => $use_nagios,
+                nagios_check_string => $nagios_check_string,
+                nagios_auth => $nagios_auth,
+                auth_name => $auth_name,
+                auth_password => $auth_password,
             }
         }
         default: { fail("no such vhost_mode: ${vhost_mode} defined for ${name}.") }

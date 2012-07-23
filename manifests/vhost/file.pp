@@ -15,7 +15,12 @@ define apache::vhost::file(
     $do_includes = false,
     $htpasswd_file = 'absent',
     $htpasswd_path = 'absent',
-    $use_mod_macro = false
+    $use_mod_macro = false,
+    $use_nagios = false,
+    $nagios_check_string = '',
+    $nagios_auth = false,
+    $auth_name = "",
+    $auth_password = "",
 ){
     $vhosts_dir = $::operatingsystem ? {
         centos => "${apache::centos::config_dir}/vhosts.d",
@@ -83,6 +88,17 @@ define apache::vhost::file(
                             "puppet://${server}/modules/site-apache/htpasswds/${name}" ],
                 owner => root, group => 0, mode => 0644;
             }
+        }
+    }
+
+    if $use_nagios {
+        nagios::service::http { "$domain":
+            use_auth => $nagios_auth,
+            auth_name => $auth_name,
+            auth_password => $auth_password,
+            check_string => $nagios_check_string,
+            server_name => $nagios_target_server_name,
+            ensure => $ensure
         }
     }
 }

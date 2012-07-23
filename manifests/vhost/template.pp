@@ -61,6 +61,11 @@ define apache::vhost::template(
     $allow_list_ssl = ['all'],
     $deny_list_ssl = '',
     $order_allow_deny_ssl = "allow,deny",
+    $use_nagios = false,
+    $nagios_check_string = '',
+    $nagios_auth = false,
+    $auth_name = "",
+    $auth_password = "",
 ){
 
     if ! $use_custom_ssl_access {
@@ -146,6 +151,11 @@ define apache::vhost::template(
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,
         use_mod_macro => $use_mod_macro,
+        use_nagios => $use_nagios,
+        nagios_check_string => $nagios_check_string,
+        nagios_auth => $nagios_auth,
+        auth_name => $auth_name,
+        auth_password => $auth_password,
     }
 }
 
