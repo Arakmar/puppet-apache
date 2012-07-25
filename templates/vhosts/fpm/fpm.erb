@@ -94,6 +94,17 @@
     <%- end -%>
     DocumentRoot <%= documentroot %>/
 
+    SSLEngine on
+    <%- if ssl_certificate_file.to_s != 'absent' then -%>
+    SSLCertificateFile <%= ssl_certificate_file %>
+    <%- end -%>
+    <%- if ssl_certificate_key_file.to_s != 'absent' then -%>
+    SSLCertificateKeyFile <%= ssl_certificate_key_file %>
+    <%- end -%>
+    <%- if ssl_certificate_chain_file.to_s != 'absent' then -%>
+    SSLCertificateChainFile <%= ssl_certificate_chain_file %>
+    <%- end -%>
+
     <%- if logpath != 'absent' then -%>
     ErrorLog <%= logpath %>/error_log
     CustomLog <%= logpath %>/access_log combined
@@ -103,7 +114,6 @@
     AddDefaultCharset <%= default_charset %>
     <%- end -%>
 
-    <%- if options.to_s != 'absent' or htpasswd_file.to_s != 'absent' then -%>
     <Directory "<%= documentroot %>/">
         AllowOverride <%= allow_override %>
 
@@ -125,7 +135,23 @@
         require valid-user
         <%- end -%>
     </Directory>
-    <%- end %>
+
+    FastCGIExternalServer <%= documentroot %>/.fpm/ssl-handler -socket /var/lib/apache2/fpm-<%= website_name %>.sock
+    AddType application/x-httpd-fastphp .php
+    Action application/x-httpd-fastphp /.fpm/ssl-handler
+
+    <FilesMatch "\.ph(p3?|tml)$">
+        SetHandler application/x-httpd-fastphp
+    </FilesMatch>
+    <FilesMatch "\.phps$">
+        SetHandler application/x-httpd-fastphp
+    </FilesMatch>
+
+    <Location /.fpm/handler-ssl>
+        Order deny,allow
+        Deny from all
+        Allow from env=REDIRECT_STATUS
+    </Location>
 
     <%- unless additional_options.to_s == 'absent' then -%>
     <%= additional_options %>

@@ -24,7 +24,10 @@ define apache::vhost::static(
     $htpasswd_file = 'absent',
     $htpasswd_path = 'absent',
     $mod_security = false,
-    $mod_security_relevantonly = true
+    $mod_security_relevantonly = true,
+    $ssl_certificate_file = 'absent',
+    $ssl_certificate_key_file = 'absent',
+    $ssl_certificate_chain_file = 'absent',
 ){
     # create webdir
     ::apache::vhost::webdir{$name:
@@ -55,6 +58,9 @@ define apache::vhost::static(
         additional_options => $additional_options,
         default_charset => $default_charset,
         ssl_mode => $ssl_mode,
+        ssl_certificate_file => $ssl_certificate_file,
+        ssl_certificate_key_file => $ssl_certificate_key_file,
+        ssl_certificate_chain_file => $ssl_certificate_chain_file,
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,
         mod_security => $mod_security,
