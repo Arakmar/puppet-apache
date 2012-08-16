@@ -159,6 +159,7 @@ define apache::vhost::template(
         nagios_auth => $nagios_auth,
         auth_name => $auth_name,
         auth_password => $auth_password,
+        ssl_mode => $ssl_mode,
     }
 }
 

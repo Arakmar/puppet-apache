@@ -21,6 +21,7 @@ define apache::vhost::file(
     $nagios_auth = false,
     $auth_name = "",
     $auth_password = "",
+    $ssl_mode = false,
 ){
     $vhosts_dir = $::operatingsystem ? {
         centos => "${apache::centos::config_dir}/vhosts.d",
@@ -98,6 +99,7 @@ define apache::vhost::file(
             auth_password => $auth_password,
             check_string => $nagios_check_string,
             server_name => $nagios_target_server_name,
+            ssl_mode => $ssl_mode,
             ensure => $ensure
         }
     }
