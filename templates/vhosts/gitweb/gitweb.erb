@@ -1,7 +1,6 @@
 # <%= servername %>
 <%- unless ssl_mode.to_s == 'only'  then -%>
 <VirtualHost *:80>
-    Include include.d/defaults.inc
     ServerName <%= servername %>
     <%- unless serveralias.to_s.empty? then -%>
     ServerAlias <%= serveralias %>
@@ -11,8 +10,11 @@
     <%- end -%>
     DocumentRoot <%= documentroot %>/
 
-    ErrorLog <%= logdir %>/error_log
-    CustomLog <%= logdir %>/access_log combined
+	<%- if logpath != 'absent' then -%>
+    ErrorLog <%= logpath %>/error_log
+    CustomLog <%= logpath %>/access_log combined
+    <%- end -%>
+    
     <%- if default_charset.to_s != 'absent' then -%>
     AddDefaultCharset <%= default_charset %>
     <%- end -%>
@@ -46,24 +48,6 @@
 
     <%- end -%>
 
-    <IfModule mod_security2.c>
-        <%- if mod_security.to_s == 'true' then -%>
-        SecRuleEngine On
-        <%- if mod_security_relevantonly.to_s == 'true' then -%>
-        SecAuditEngine RelevantOnly
-        <%- else -%>
-        SecAuditEngine On
-        <%- end -%>
-        <%- else -%>
-        SecRuleEngine Off
-        SecAuditEngine Off
-        <%- end -%>
-        SecAuditLogType Concurrent
-        SecAuditLogStorageDir <%= logdir %>/
-        SecAuditLog <%= logdir %>/mod_security_audit.log
-        SecDebugLog <%= logdir %>/mod_security_debug.log
-    </IfModule>
-
     <%- unless additional_options.to_s == 'absent' then -%>
     <%= additional_options %>
     <%- end -%>
@@ -72,8 +56,6 @@
 
 <%- unless ssl_mode.to_s == 'false'  then -%>
 <VirtualHost *:443>
-    Include include.d/defaults.inc
-    Include include.d/ssl_defaults.inc
     ServerName <%= servername %>
     <%- unless serveralias.to_s.empty? then -%>
     ServerAlias <%= serveralias %>
@@ -83,8 +65,11 @@
     <%- end -%>
     DocumentRoot <%= documentroot %>/
 
-    ErrorLog <%= logdir %>/error_log
-    CustomLog <%= logdir %>/access_log combined
+    <%- if logpath != 'absent' then -%>
+    ErrorLog <%= logpath %>/error_log
+    CustomLog <%= logpath %>/access_log combined
+    <%- end -%>
+    
     <%- if default_charset.to_s != 'absent' then -%>
     AddDefaultCharset <%= default_charset %>
     <%- end -%>
@@ -114,24 +99,6 @@
     </Directory>
 
     <%- end %>
-
-    <IfModule mod_security2.c>
-        <%- if mod_security.to_s == 'true' then -%>
-        SecRuleEngine On
-        <%- if mod_security_relevantonly.to_s == 'true' then -%>
-        SecAuditEngine RelevantOnly
-        <%- else -%>
-        SecAuditEngine On
-        <%- end -%>
-        <%- else -%>
-        SecRuleEngine Off
-        SecAuditEngine Off
-        <%- end -%>
-        SecAuditLogType Concurrent
-        SecAuditLogStorageDir <%= logdir %>/
-        SecAuditLog <%= logdir %>/mod_security_audit.log
-        SecDebugLog <%= logdir %>/mod_security_debug.log
-    </IfModule>
 
     <%- unless additional_options.to_s == 'absent' then -%>
     <%= additional_options %>

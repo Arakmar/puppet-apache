@@ -5,6 +5,8 @@ define apache::vhost::gitweb(
     $server_admin = 'absent',
     $owner = root,
     $group = apache,
+    $path = '/var/www/git',
+    $path_is_webdir = true,
     $documentroot_owner = apache,
     $documentroot_group = 0,
     $documentroot_mode = 0640,
@@ -15,20 +17,16 @@ define apache::vhost::gitweb(
     $default_charset = 'absent',
     $ssl_mode = false,
     $htpasswd_file = 'absent',
-    $htpasswd_path = 'absent'
+    $htpasswd_path = 'absent',
+    $logpath = 'absent',
+    $gitweb_config = '/etc/gitweb.conf'
 ){
     # create vhost configuration file
     ::apache::vhost{$name:
         ensure => $ensure,
-        path => '/var/www/git',
-        path_is_webdir => true,
-        logpath => $::operatingsystem ? {
-            centos => '/var/log/httpd',
-            fedora => '/var/log/httpd',
-            redhat => '/var/log/httpd',
-            openbsd => '/var/www/logs',
-            default => '/var/log/apache2'
-        },
+        path => $path,
+        path_is_webdir => $path_is_webdir,
+        logpath => $logpath,
         template_mode => 'gitweb',
         domain => $domain,
         domainalias => $domainalias,
