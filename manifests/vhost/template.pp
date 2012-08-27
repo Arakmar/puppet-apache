@@ -69,6 +69,7 @@ define apache::vhost::template(
     $nagios_auth = false,
     $auth_name = "",
     $auth_password = "",
+    $gitweb_config = "/etc/gitweb.conf",
 ){
 
     if ! $use_custom_ssl_access {

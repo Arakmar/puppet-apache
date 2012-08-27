@@ -19,7 +19,10 @@ define apache::vhost::gitweb(
     $htpasswd_file = 'absent',
     $htpasswd_path = 'absent',
     $logpath = 'absent',
-    $gitweb_config = '/etc/gitweb.conf'
+    $gitweb_config = '/etc/gitweb.conf',
+    $ssl_certificate_file = "absent",
+    $ssl_certificate_key_file = "absent",
+    $ssl_certificate_chain_file = "absent",
 ){
     # create vhost configuration file
     ::apache::vhost{$name:
@@ -37,6 +40,9 @@ define apache::vhost::gitweb(
         additional_options => $additional_options,
         default_charset => $default_charset,
         ssl_mode => $ssl_mode,
+        ssl_certificate_file => $ssl_certificate_file,
+        ssl_certificate_key_file => $ssl_certificate_key_file,
+        ssl_certificate_chain_file => $ssl_certificate_chain_file,
         htpasswd_file => $htpasswd_file,
         htpasswd_path => $htpasswd_path,
         mod_security => false,
