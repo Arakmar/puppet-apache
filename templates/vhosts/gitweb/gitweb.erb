@@ -9,17 +9,6 @@
     ServerAdmin <%= server_admin %>
     <%- end -%>
     DocumentRoot <%= documentroot %>/
-    
-    SSLEngine on
-    <%- if ssl_certificate_file.to_s != 'absent' then -%>
-    SSLCertificateFile <%= ssl_certificate_file %>
-    <%- end -%>
-    <%- if ssl_certificate_key_file.to_s != 'absent' then -%>
-    SSLCertificateKeyFile <%= ssl_certificate_key_file %>
-    <%- end -%>
-    <%- if ssl_certificate_chain_file.to_s != 'absent' then -%>
-    SSLCertificateChainFile <%= ssl_certificate_chain_file %>
-    <%- end -%>
 
     <%- if logpath != 'absent' then -%>
     ErrorLog <%= logpath %>/error_log
@@ -75,6 +64,17 @@
     ServerAdmin <%= server_admin %>
     <%- end -%>
     DocumentRoot <%= documentroot %>/
+    
+    SSLEngine on
+    <%- if ssl_certificate_file.to_s != 'absent' then -%>
+    SSLCertificateFile <%= ssl_certificate_file %>
+    <%- end -%>
+    <%- if ssl_certificate_key_file.to_s != 'absent' then -%>
+    SSLCertificateKeyFile <%= ssl_certificate_key_file %>
+    <%- end -%>
+    <%- if ssl_certificate_chain_file.to_s != 'absent' then -%>
+    SSLCertificateChainFile <%= ssl_certificate_chain_file %>
+    <%- end -%>
 
     <%- if logpath != 'absent' then -%>
     ErrorLog <%= logpath %>/error_log
