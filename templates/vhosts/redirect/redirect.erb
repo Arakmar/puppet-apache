@@ -1,7 +1,6 @@
 # <%= servername %>
 <%- unless ssl_mode.to_s == 'only'  then -%>
 <VirtualHost *:80>
-    Include include.d/defaults.inc
     ServerName <%= servername %>
     <%- unless serveralias.to_s.empty? then -%>
     ServerAlias <%= serveralias %>
@@ -24,8 +23,6 @@
 
 <%- unless ssl_mode.to_s == 'false'  then -%>
 <VirtualHost *:443>
-    Include include.d/defaults.inc
-    Include include.d/ssl_defaults.inc
     ServerName <%= servername %>
     <%- unless serveralias.to_s.empty? then -%>
     ServerAlias <%= serveralias %>
@@ -34,8 +31,10 @@
     ServerAdmin <%= server_admin %>
     <%- end -%>
 
-    ErrorLog logs/redirect_<%= servername %>_error.log
-    CustomLog logs/redirect_<%= servername %>_access.log combined
+    <%- if logpath != 'absent' then -%>
+    ErrorLog <%= logpath %>/error_log
+    CustomLog <%= logpath %>/access_log combined
+    <%- end -%>
 
     Redirect permanent / https://<%= options %>
 
