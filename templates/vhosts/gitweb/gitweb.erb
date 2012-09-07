@@ -94,7 +94,7 @@
 	Allow from <%= real_allow_list_ssl.join(' ') %>
 	<%- end -%>
 	<%- unless real_deny_list_ssl.empty? then -%>
-	Allow from <%= real_deny_list_ssl.join(' ') %>
+	Deny from <%= real_deny_list_ssl.join(' ') %>
 	<%- end -%>
         <%- if options.to_s != 'absent' or do_includes.to_s == 'true' then -%>
         Options <%- unless options.to_s == 'absent' then -%><%= options %><%- end -%><%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%> +Includes<%- end -%><%- unless options.include?('+ExecCGI') then -%> +ExecCGI<%- end -%>
