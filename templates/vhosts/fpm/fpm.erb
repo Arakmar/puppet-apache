@@ -36,7 +36,7 @@
 	Allow from <%= allow_list.join(' ') %>
 	<%- end -%>
 	<%- unless deny_list.empty? then -%>
-	Allow from <%= deny_list.join(' ') %>
+	Deny from <%= deny_list.join(' ') %>
 	<%- end -%>
 
         <%- if options.to_s != 'absent' or do_includes.to_s == 'true' then -%>
@@ -122,7 +122,7 @@
 	Allow from <%= real_allow_list_ssl.join(' ') %>
 	<%- end -%>
 	<%- unless real_deny_list_ssl.empty? then -%>
-	Allow from <%= real_deny_list_ssl.join(' ') %>
+	Deny from <%= real_deny_list_ssl.join(' ') %>
 	<%- end -%>
         <%- if options.to_s != 'absent' or do_includes.to_s == 'true' then -%>
         Options <%= options %><%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%> +Includes<%- end -%>
