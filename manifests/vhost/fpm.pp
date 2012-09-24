@@ -23,6 +23,7 @@ define apache::vhost::fpm(
     $allow_list_ssl = ['all'],
     $deny_list_ssl = '',
     $order_allow_deny_ssl = "allow,deny",
+    $additional_options = "",
 ){
     apache::vhost::template {$name:
         ensure => $ensure,
@@ -50,5 +51,6 @@ define apache::vhost::fpm(
         nagios_auth => $nagios_auth,
         auth_name => $auth_name,
         auth_password => $auth_password,
+        additional_options => $additional_options,
     }
 }
