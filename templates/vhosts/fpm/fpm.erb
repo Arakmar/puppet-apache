@@ -51,7 +51,7 @@
         <%- end -%>
     </Directory>
     
-	FastCGIExternalServer <%= documentroot %>/.fpm/handler -socket /var/lib/apache2/fpm-<%= website_name %>.sock
+	FastCGIExternalServer <%= documentroot %>/.fpm/handler -socket <%= real_socket_path %>
 	AddType application/x-httpd-fastphp .php
 	Action application/x-httpd-fastphp /.fpm/handler
 	
@@ -136,7 +136,7 @@
         <%- end -%>
     </Directory>
 
-    FastCGIExternalServer <%= documentroot %>/.fpm/ssl-handler -socket /var/lib/apache2/fpm-<%= website_name %>.sock
+    FastCGIExternalServer <%= documentroot %>/.fpm/ssl-handler -socket <%= real_socket_path %>
     AddType application/x-httpd-fastphp .php
     Action application/x-httpd-fastphp /.fpm/ssl-handler
 

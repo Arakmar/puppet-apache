@@ -24,7 +24,14 @@ define apache::vhost::fpm(
     $deny_list_ssl = '',
     $order_allow_deny_ssl = "allow,deny",
     $additional_options = "",
+    $socket_path = ""
 ){
+    if $socket_path == "" {
+	$real_socket_path = "/var/lib/apache2/fpm-${website_name}.sock"
+    } else {
+        $real_socket_path = $socket_path
+    }
+
     apache::vhost::template {$name:
         ensure => $ensure,
         template_mode => 'fpm',
