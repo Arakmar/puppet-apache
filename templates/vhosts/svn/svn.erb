@@ -47,7 +47,7 @@
         AuthUserFile <%= real_htpasswd_path %>
         require valid-user
         <%- end -%>
-    </Directory>
+    </Location>
 
     <%- end -%>
 
@@ -111,7 +111,7 @@
         AuthUserFile <%= real_htpasswd_path %>
         require valid-user
         <%- end -%>
-    </Directory>
+    </Location>
 
     <%- unless additional_options.to_s == 'absent' then -%>
     <%= additional_options %>
