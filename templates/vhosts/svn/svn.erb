@@ -22,9 +22,7 @@
     <%- end -%>
 
     <%- if not ssl_mode.to_s == 'force' then -%>
-    <Location /">
-        AllowOverride <%= allow_override %>
-	
+    <Location />
 	Order <%= order_allow_deny %>
 	<%- unless allow_list.empty? then -%>
 	Allow from <%= allow_list.join(' ') %>
@@ -87,9 +85,7 @@
     AddDefaultCharset <%= default_charset %>
     <%- end -%>
 
-    <Location /">
-        AllowOverride <%= allow_override %>
-        
+    <Location />
         Order <%= real_order_allow_deny_ssl %>
 	<%- unless real_allow_list_ssl.empty? then -%>
 	Allow from <%= real_allow_list_ssl.join(' ') %>
