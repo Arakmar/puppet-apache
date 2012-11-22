@@ -128,6 +128,20 @@
         <%- end -%>
     </Directory>
 
+    SetEnv GIT_PROJECT_ROOT <%= git_project_root_path %>
+    SetEnv GIT_HTTP_EXPORT_ALL
+    SetEnv GITOLITE_HTTP_HOME <%= gitolite_home_path %>
+    SetEnv GITWEB_CONFIG <%= gitweb_config_path %>
+
+    ScriptAliasMatch \
+        "(?x)^/(.*/(HEAD | \
+            info/refs | \
+            objects/(info/[^/]+ | \
+                [0-9a-f]{2}/[0-9a-f]{38} | \
+                pack/pack-[0-9a-f]{40}\.(pack|idx)) | \
+                git-(upload|receive)-pack))$" \
+        <%= gitolite_wrapper_path %>/$1
+
     <%- unless additional_options.to_s == 'absent' then -%>
     <%= additional_options %>
     <%- end -%>
