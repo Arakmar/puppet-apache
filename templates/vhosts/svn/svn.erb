@@ -30,14 +30,10 @@
 	<%- unless deny_list.empty? then -%>
 	Deny from <%= deny_list.join(' ') %>
 	<%- end -%>
-	
+
         <%- if options.to_s != 'absent' or do_includes.to_s == 'true' then -%>
         Options <%- unless options.to_s == 'absent' then -%><%= options %><%- end -%><%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%> +Includes<%- end -%><%- unless options.include?('+ExecCGI') then -%> +ExecCGI<%- end -%>
         <%- end -%>
-
-        DAV svn
-        SVNParentPath <%= svn_parent_path %>
-        AuthzSVNAccessFile <%= svn_access_file_path %>
 
         <%- unless htpasswd_file.to_s == 'absent' then -%>
         AuthType Basic
@@ -46,6 +42,36 @@
         require valid-user
         <%- end -%>
     </Location>
+
+    <Location /svn>
+        Order <%= order_allow_deny %>
+        <%- unless allow_list.empty? then -%>
+        Allow from <%= allow_list.join(' ') %>
+        <%- end -%>
+        <%- unless deny_list.empty? then -%>
+        Deny from <%= deny_list.join(' ') %>
+        <%- end -%>
+
+        <%- if options.to_s != 'absent' or do_includes.to_s == 'true' then -%>
+        Options <%- unless options.to_s == 'absent' then -%><%= options %><%- end -%><%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%> +Includes<%- end -%><%- unless options.include?('+ExecCGI') then -%> +ExecCGI<%- end -%>
+        <%- end -%>
+
+        DAV svn
+        SVNParentPath <%= svn_parent_path %>
+        AuthzSVNAccessFile <%= svn_access_file_path %>
+
+    </Location>
+
+    <Directory <%= websvn_path %>>
+        DirectoryIndex index.php
+        Options FollowSymLinks
+        Order allow,deny
+        Allow from all
+        <IfModule mod_php4.c>
+            php_flag magic_quotes_gpc Off
+            php_flag track_vars On
+        </IfModule>
+    </Directory>
 
     <%- end -%>
 
@@ -87,19 +113,15 @@
 
     <Location />
         Order <%= real_order_allow_deny_ssl %>
-	<%- unless real_allow_list_ssl.empty? then -%>
-	Allow from <%= real_allow_list_ssl.join(' ') %>
-	<%- end -%>
-	<%- unless real_deny_list_ssl.empty? then -%>
-	Deny from <%= real_deny_list_ssl.join(' ') %>
-	<%- end -%>
+        <%- unless real_allow_list_ssl.empty? then -%>
+        Allow from <%= real_allow_list_ssl.join(' ') %>
+        <%- end -%>
+        <%- unless real_deny_list_ssl.empty? then -%>
+        Deny from <%= real_deny_list_ssl.join(' ') %>
+        <%- end -%>
         <%- if options.to_s != 'absent' or do_includes.to_s == 'true' then -%>
         Options <%- unless options.to_s == 'absent' then -%><%= options %><%- end -%><%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%> +Includes<%- end -%><%- unless options.include?('+ExecCGI') then -%> +ExecCGI<%- end -%>
         <%- end -%>
-
-        DAV svn
-        SVNParentPath <%= svn_parent_path %>
-        AuthzSVNAccessFile <%= svn_access_file_path %>
 
         <%- unless htpasswd_file.to_s == 'absent' then -%>
         AuthType Basic
@@ -108,6 +130,35 @@
         require valid-user
         <%- end -%>
     </Location>
+
+    <Location /svn>
+        Order <%= real_order_allow_deny_ssl %>
+        <%- unless real_allow_list_ssl.empty? then -%>
+        Allow from <%= real_allow_list_ssl.join(' ') %>
+        <%- end -%>
+        <%- unless real_deny_list_ssl.empty? then -%>
+        Deny from <%= real_deny_list_ssl.join(' ') %>
+        <%- end -%>
+        <%- if options.to_s != 'absent' or do_includes.to_s == 'true' then -%>
+        Options <%- unless options.to_s == 'absent' then -%><%= options %><%- end -%><%- if do_includes.to_s == 'true' and not options.include?('+Includes') then -%> +Includes<%- end -%><%- unless options.include?('+ExecCGI') then -%> +ExecCGI<%- end -%>
+        <%- end -%>
+
+        DAV svn
+        SVNParentPath <%= svn_parent_path %>
+        AuthzSVNAccessFile <%= svn_access_file_path %>
+
+    </Location>
+
+    <Directory <%= websvn_path %>>
+        DirectoryIndex index.php
+        Options FollowSymLinks
+        Order allow,deny
+        Allow from all
+        <IfModule mod_php4.c>
+            php_flag magic_quotes_gpc Off
+            php_flag track_vars On
+        </IfModule>
+    </Directory>
 
     <%- unless additional_options.to_s == 'absent' then -%>
     <%= additional_options %>

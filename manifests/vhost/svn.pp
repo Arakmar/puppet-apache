@@ -28,7 +28,8 @@ define apache::vhost::svn(
     $default_charset = 'absent',
     $logpath = 'absent',
     $svn_parent_path,
-    $svn_access_file_path
+    $svn_access_file_path,
+    $websvn_path
 ){
     apache::vhost::template {$name:
         ensure => $ensure,
