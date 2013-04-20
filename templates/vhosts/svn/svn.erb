@@ -8,6 +8,7 @@
     <%- unless server_admin.to_s.empty? or server_admin.to_s == 'absent' then -%>
     ServerAdmin <%= server_admin %>
     <%- end -%>
+    DocumentRoot <%= websvn_path %>/
 
     <%- if logpath != 'absent' then -%>
     ErrorLog <%= logpath %>/error_log
@@ -90,6 +91,7 @@
     <%- unless server_admin.to_s.empty? or server_admin.to_s == 'absent' then -%>
     ServerAdmin <%= server_admin %>
     <%- end -%>
+    DocumentRoot <%= websvn_path %>/
     
     SSLEngine on
     <%- if ssl_certificate_file.to_s != 'absent' then -%>
