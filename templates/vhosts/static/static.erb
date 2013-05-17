@@ -43,6 +43,10 @@
         AuthName "Access for <%= servername %>"
         AuthUserFile <%= real_htpasswd_path %>
         require valid-user
+        
+        <%- unless satisfy.to_s == 'absent' then -%>
+        Satisfy <%= satisfy %>
+        <%- end -%>
         <%- end -%>
     </Directory>
     <%- end -%>
@@ -103,6 +107,10 @@
         AuthName "Access for <%= servername %>"
         AuthUserFile <%= real_htpasswd_path %>
         require valid-user
+        
+        <%- unless satisfy.to_s == 'absent' then -%>
+        Satisfy <%= satisfy %>
+        <%- end -%>
         <%- end -%>
     </Directory>
 

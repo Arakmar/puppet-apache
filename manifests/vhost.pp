@@ -62,6 +62,7 @@ define apache::vhost(
     $allow_list_ssl = ['all'],
     $deny_list_ssl = '',
     $order_allow_deny_ssl = "allow,deny",
+    $satisfy = 'absent',
 ) {
     include apache
 
@@ -127,6 +128,7 @@ define apache::vhost(
                 allow_list_ssl => $allow_list_ssl,
                 deny_list_ssl => $deny_list_ssl,
                 order_allow_deny_ssl => $order_allow_deny_ssl,
+                satisfy => $satisfy,
                 use_nagios => $use_nagios,
                 nagios_check_string => $nagios_check_string,
                 nagios_auth => $nagios_auth,
