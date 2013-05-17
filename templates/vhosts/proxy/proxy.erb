@@ -10,6 +10,14 @@
 
     <Location <%= proxy_path %>>
         ProxyPass <%= proxy_url %>
+        
+        Order <%= order_allow_deny %>
+        <%- unless allow_list.empty? then -%>
+        Allow from <%= allow_list.join(' ') %>
+        <%- end -%>
+        <%- unless deny_list.empty? then -%>
+        Deny from <%= deny_list.join(' ') %>
+        <%- end -%>
     </Location>
 
 
