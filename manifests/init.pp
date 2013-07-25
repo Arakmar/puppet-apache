@@ -27,11 +27,5 @@ class apache {
     openbsd: { include apache::openbsd }
     default: { include apache::base }
   }
-  if $use_munin {
-    include apache::status
-  }
-  if $use_shorewall {
-    include shorewall::rules::http
-  }
 }
 
