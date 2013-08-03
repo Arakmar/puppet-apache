@@ -34,6 +34,9 @@ define apache::vhost::gitweb(
     $gitweb_config_path = '/etc/gitweb.conf',
     $gitolite_wrapper_path
 ){
+    apache::module { "rewrite" :
+    }
+
     # create vhost configuration file
     apache::vhost::template{$name:
         template_mode => 'gitweb',
@@ -67,6 +70,7 @@ define apache::vhost::gitweb(
         additional_options => $additional_options,
         default_charset => $default_charset,
         logpath => $logpath,
+        require => Apache::Module["rewrite"]
     }
 }
 
